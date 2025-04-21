@@ -18,7 +18,7 @@ This is a starter template that combines Svelte 5 (with Runes) for the frontend 
 1. Clone this repository
 
    ```bash
-   git clone https://github.com/yourusername/svelte-hono-template.git my-app
+   git clone https://github.com/dhairya137/svelte-hono-cf-workers-template.git my-app
    cd my-app
    ```
 
@@ -47,7 +47,7 @@ This is a starter template that combines Svelte 5 (with Runes) for the frontend 
 
 ## Project Structure
 
-```
+```bash
 ├── src/                  # Source code
 │   ├── App.svelte        # Main Svelte component
 │   ├── main.ts           # Svelte entry point
@@ -60,7 +60,7 @@ This is a starter template that combines Svelte 5 (with Runes) for the frontend 
 ├── index.html            # HTML entry point
 ├── svelte.config.js      # Svelte configuration
 ├── vite.config.ts        # Vite configuration
-└── wrangler.jsonc        # Cloudflare Workers configuration
+└── wrangler.toml         # Cloudflare Workers configuration
 ```
 
 ## How It Works
@@ -78,7 +78,7 @@ const app = mount(App, {
 });
 ```
 
-```svelte
+```js
 <!-- Example from App.svelte -->
 <script lang="ts">
 	let count = $state(0);
@@ -163,14 +163,11 @@ Create new Svelte components in the `src` directory and import them in `App.svel
 
 ### Environment Variables
 
-Add environment variables in `wrangler.jsonc`:
+Add environment variables in `wrangler.toml`:
 
-```json
-{
-	"vars": {
-		"MY_VARIABLE": "my-value"
-	}
-}
+```toml
+[vars]
+MY_VARIABLE = "my-value"
 ```
 
 ## Deployment
