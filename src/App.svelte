@@ -38,8 +38,8 @@
 	}
 </script>
 
-<h1>Svelte + Hono on Cloudflare Workers</h1>
-<p>A purely static Svelte frontend with Hono API backend</p>
+<h1>Svelte5-Hono-CF Template</h1>
+<p>A modern Svelte 5 frontend with Hono API on Cloudflare Workers</p>
 
 <div class="api-section">
 	<h2>Hono API Integration Demo</h2>

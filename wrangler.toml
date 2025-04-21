@@ -1,0 +1,15 @@
+name = "svelte-hono-cf-workers-template"
+main = "src/worker.ts"
+compatibility_date = "2025-04-21"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[observability]
+enabled = true
+
+[dev]
+port = 8787 
