@@ -38,6 +38,9 @@
   }
 </script>
 
+<h1>Svelte + Hono on Cloudflare Workers</h1>
+<p>A purely static Svelte frontend with Hono API backend</p>
+
 <div class="api-section">
   <h2>Hono API Integration Demo</h2>
   
@@ -75,6 +78,17 @@
 </div>
 
 <style>
+  h1 {
+    color: #ff3e00;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    color: #555;
+    margin-bottom: 2rem;
+  }
+
   .api-section {
     margin-top: 2rem;
     padding: 1rem;
@@ -87,6 +101,11 @@
     padding: 1rem;
     background-color: #f9f9f9;
     border-radius: 4px;
+  }
+  
+  h3 {
+    margin-bottom: 1rem;
+    color: #333;
   }
   
   button {
