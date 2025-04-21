@@ -4,11 +4,11 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [
-		tailwindcss(), 
+		tailwindcss(),
 		svelte({
 			// Enable Svelte 5 runes
 			compilerOptions: {
-				runes: true,
+				runes: true
 			}
 		})
 	],
@@ -20,10 +20,10 @@ export default defineConfig({
 			// Ensure main.ts is the primary entry point
 			input: 'index.html',
 			output: {
-				manualChunks: undefined, // Keep chunks together for smaller files
+				manualChunks: undefined // Keep chunks together for smaller files
 			}
 		},
 		// Make sure we're generating clean asset paths
-		minify: true,
+		minify: true
 	}
 });

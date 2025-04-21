@@ -16,22 +16,26 @@ This is a starter template that combines Svelte 5 (with Runes) for the frontend 
 ## Quick Start
 
 1. Clone this repository
+
    ```bash
    git clone https://github.com/yourusername/svelte-hono-template.git my-app
    cd my-app
    ```
 
 2. Install dependencies
+
    ```bash
    npm install
    ```
 
 3. Start development server
+
    ```bash
    npm run dev
    ```
 
 4. Build for production
+
    ```bash
    npm run build
    ```
@@ -69,19 +73,19 @@ The Svelte 5 app starts in `src/main.ts`, which mounts the main `App.svelte` com
 // Example from src/main.ts
 import { mount } from 'svelte';
 const app = mount(App, {
-  target: document.getElementById('app'),
-  props: {}
+	target: document.getElementById('app'),
+	props: {}
 });
 ```
 
 ```svelte
 <!-- Example from App.svelte -->
 <script lang="ts">
-  let count = $state(0);
-  
-  function increment() {
-    count++;
-  }
+	let count = $state(0);
+
+	function increment() {
+		count++;
+	}
 </script>
 
 <button onclick={increment}>Count: {count}</button>
@@ -98,10 +102,10 @@ import { Hono } from 'hono';
 const api = new Hono();
 
 api.get('/hello', (c) => {
-  return c.json({
-    message: 'Hello from Hono!',
-    timestamp: new Date().toISOString()
-  });
+	return c.json({
+		message: 'Hello from Hono!',
+		timestamp: new Date().toISOString()
+	});
 });
 
 export const apiRoutes = api;
@@ -123,7 +127,7 @@ app.route('/api', apiRoutes);
 
 // Serve static files
 app.get('*', async (c) => {
-  // ... serve static files or fallback to index.html
+	// ... serve static files or fallback to index.html
 });
 
 export default app;
@@ -144,10 +148,12 @@ Add new routes in `src/workers/api.ts`:
 
 ```typescript
 api.get('/new-endpoint', (c) => {
-  return c.json({
-    message: 'This is a new endpoint',
-    data: { /* your data */ }
-  });
+	return c.json({
+		message: 'This is a new endpoint',
+		data: {
+			/* your data */
+		}
+	});
 });
 ```
 
@@ -161,9 +167,9 @@ Add environment variables in `wrangler.jsonc`:
 
 ```json
 {
-  "vars": {
-    "MY_VARIABLE": "my-value"
-  }
+	"vars": {
+		"MY_VARIABLE": "my-value"
+	}
 }
 ```
 
@@ -172,6 +178,7 @@ Add environment variables in `wrangler.jsonc`:
 This template is configured for deployment to Cloudflare Workers:
 
 1. Configure your Cloudflare account in Wrangler
+
    ```bash
    npx wrangler login
    ```

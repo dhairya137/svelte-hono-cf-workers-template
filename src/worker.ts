@@ -1,7 +1,7 @@
 import app from './workers/index';
 
 export default {
-  fetch: app.fetch,
+	fetch: app.fetch
 };
 
-export type { Env } from './workers/index'; 
+export type { Env } from './workers/index';

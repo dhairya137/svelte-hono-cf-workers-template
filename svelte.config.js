@@ -5,10 +5,10 @@ const config = {
 	// Consult https://svelte.dev/docs/preprocessors
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
-	
+
 	// Enable the Svelte 5 compiler features
 	compilerOptions: {
-		runes: true,
+		runes: true
 	}
 };
 
