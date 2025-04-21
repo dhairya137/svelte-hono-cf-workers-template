@@ -7,11 +7,11 @@
     [key: string]: any;
   }
   
-  let apiData: APIData | null = null;
-  let userData: APIData | null = null;
-  let loading = false;
-  let userLoading = false;
-  let userId = '1';
+  let apiData = $state<APIData | null>(null);
+  let userData = $state<APIData | null>(null);
+  let loading = $state(false);
+  let userLoading = $state(false);
+  let userId = $state('1');
 
   async function fetchApiData() {
     loading = true;
@@ -46,7 +46,7 @@
   
   <div class="api-card">
     <h3>Basic API</h3>
-    <button on:click={fetchApiData} disabled={loading}>
+    <button onclick={fetchApiData} disabled={loading}>
       {loading ? 'Loading...' : 'Fetch API Data'}
     </button>
     
@@ -64,7 +64,7 @@
       <label for="userId">User ID:</label>
       <input id="userId" type="text" bind:value={userId} />
     </div>
-    <button on:click={fetchUserData} disabled={userLoading}>
+    <button onclick={fetchUserData} disabled={userLoading}>
       {userLoading ? 'Loading...' : 'Fetch User Data'}
     </button>
     
@@ -150,4 +150,4 @@
     width: 100%;
     max-width: 200px;
   }
-</style>
+</style> 

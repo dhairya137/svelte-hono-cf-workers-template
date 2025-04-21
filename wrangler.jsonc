@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "my-svelte-app",
+	"name": "svelte-hono-app",
 	"main": "src/worker.ts",
 	"compatibility_date": "2025-04-21",
 	"compatibility_flags": ["nodejs_compat"],
