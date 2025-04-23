@@ -29,10 +29,42 @@ export async function generateKeyPair() {
  * @param privateKey Private key for signing
  * @returns JWT token
  */
-export async function createJwt(user: { id: string; email: string }, privateKey: string) {
-  // Parse private key from JWK
-  const key = await jose.importJWK(JSON.parse(privateKey), 'RS256');
-  
+import { importPKCS8 } from 'jose';
+
+// For local development, paste your PEM private key here
+const LOCAL_PRIVATE_KEY_PEM = `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCnJ0LuAsBZymrr
+ovPPWksDLXTZSlv+fRSxgIBuDgOtgugDQuhhAN/k52C8KgvjsFCuFD5Cf1e6icRb
+BT9tZi3R7Dl9lEHmzLr8sOWZj9YqpLwtk2OOMV8pd51wwiM9ZxAwbYPDXV4WrzDr
+m5mGm7DwEkrKYCcc/WjwzqL1NUAYr+Qp8Ke6Dw6vKvbCDMmtM3AuzL3Iz4ZAbzzw
+j2XElt/O1nQD401zgGCLt6cnWwfzszuj2hU8oVMQumI0vSPtMvYKUCuQHVJUrNXG
++qIkAZn2PxebrjeMQKcJw/tGteAgAWCLVXJ7zY5aRpjZayX2IphqO17VQSggPMTe
+heFoQtAVAgMBAAECggEABcAJguOQV2ZpuDJyXbM2+mSBbQosUPxfjl2jzWVpBfqH
+XblbAh9EFH1LLB3sK8iAdgSXQbVcwLuFiDYNgQdvUxXjwmirvbNUSWYSd+5lSTFC
+kfTMi3MyWVxWi676BF47xda2ni1jk7cyISDIrsNDWnbeoMie/9XN2t7Y50OOMWsp
+UyOS8bfGOKr/VJHCtcl41+unKz8MjMZ2eH89hq+AokDyRgE8DspKM8FygFH3BpoF
+CU1Dlja3SN8n6rSO1LSeisRg5vauEuXDhn9mj9KJ6B9G87vjWIIeDAfXcXO24ewx
+SW85+Z5iPsk8DyuZHySetk/d4rjJzsodsMF4dc2XsQKBgQDd+dP+FXMPYTqCfbVO
+CnXoKkH9r0v3YWEsK6j4D4B2+0aEed8Yi32hJ+cHTc9y1HjvNs+FDiIknr/+lfOq
++5FCyBErBRYQWyjqGDZCBOMixRRLLzwW6aJ2GQck+PSzPJ73fCcSUaks+16ykhxi
+abLp2iXPE+jIIqUniHSv9iADaQKBgQDAxjzJvqT5hRmd0aUtOTspC3gPp0HV3EWB
+0DsxBeAnG7bv8S0ic5Tx6i9o+XTyVutO8b92S2r4Nv7I7FhQqQWKOR1CIvMnrcui
++wZXd2SrsOQMS2uz7Bbjpv/HOZTaQ7lAvAD3NGCw81Gh/RWdXkAe30bges98e6Rk
+LZFskx3NzQKBgFuV2IHdF7wgwaNVepjYeA1yYgfpa86FvzIaUX0H6FkvE8lU/1eB
+NjRn4kqBMDaQs9T/KGAdlLjHRzAjboX9hdGn+m1li9Tzx83Ob5SNr6mI5vaeZoyN
+mRpg+TGoBk5tlKlH8Fb+mm6UyF2lK1Dvi4IxH6hw7nqk0L+e7YYsZskBAoGAHROJ
+hbCAt7YQuBIwBNM2DinRsSK8NmKkBUGAPBOzzJJMlIJfGWwvkhGNlxrRPeBIW77w
+7wnPF6NL6MhlRb1IvaGBvUECRgDbzzhnq3exsofazdPuadP5W9sLh2QzBHzki1QQ
+HTlEQExjCrjesr7NkxqAWUmM1CzeDdIltie2fh0CgYAqFUaUdzIaORP/cyGf6j40
+7hQKpEkNMVB3kyGG+KHEPapRj4RzezzOEHrtLr5f3HEbDlZ2MQ+uPTBqud9ZJpiK
++jrNMTx/PgknByDNINcaFe/Kq9QQT8FgbGSlicFPufvDflikYEgl95Bu7tyGqeuS
+j3MQtv5rtDKBy8wEg0gs/Q==
+-----END PRIVATE KEY-----`;
+
+export async function createJwt(user: { id: string; email: string }, privateKey: string = LOCAL_PRIVATE_KEY_PEM) {
+  // Use PEM private key directly
+  const key = await importPKCS8(privateKey, 'RS256');
+
   // Create JWT with user information
   const jwt = await new jose.SignJWT({
     sub: user.id,
@@ -43,7 +75,7 @@ export async function createJwt(user: { id: string; email: string }, privateKey:
   })
     .setProtectedHeader({ alg: 'RS256' })
     .sign(key);
-  
+
   return jwt;
 }
 

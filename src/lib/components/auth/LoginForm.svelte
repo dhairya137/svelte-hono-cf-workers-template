@@ -8,7 +8,8 @@
   import type { LoginCredentials, AuthResponse } from '$lib/types/auth';
   
   // Props
-  export let onLoginSuccess = () => {};
+  import type { User } from '$lib/types/auth';
+export let onLoginSuccess: (user: User) => void = () => {};
   
   // State
   let email = '';
@@ -47,9 +48,9 @@
     try {
       const result = await login({ email, password, remember });
       
-      if (result.success) {
-        // Call success callback
-        onLoginSuccess();
+      if (result.success && result.user) {
+        // Call success callback with user
+        onLoginSuccess(result.user);
       } else {
         errorMessage = result.error || 'An error occurred during login';
       }

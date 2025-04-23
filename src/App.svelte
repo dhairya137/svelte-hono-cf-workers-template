@@ -28,9 +28,13 @@
 		// Listen for popstate (back/forward) events
 		window.addEventListener('popstate', handleNavigation);
 		
+		// Listen for custom navigation events from Nav component
+		window.addEventListener('navigation', handleNavigation);
+		
 		// Cleanup
 		return () => {
 			window.removeEventListener('popstate', handleNavigation);
+			window.removeEventListener('navigation', handleNavigation);
 		};
 	});
 </script>

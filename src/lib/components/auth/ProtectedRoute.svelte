@@ -5,7 +5,7 @@
   import { authStore } from '$lib/stores/authStore';
   import { checkAuth } from '$lib/services/auth';
   
-  let { redirectTo = '/login' } = $props();
+  export let redirectTo: string = '/login';
   
   let isLoading = true;
   let isAuthenticated = false;

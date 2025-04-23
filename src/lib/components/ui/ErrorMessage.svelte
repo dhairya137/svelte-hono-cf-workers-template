@@ -1,5 +1,5 @@
 <script>
-  let { message = '' } = $props();
+  export let message = '';
 </script>
 
 {#if message}

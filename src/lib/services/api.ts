@@ -10,7 +10,8 @@ const API_BASE_URL = '/api';
 const defaultOptions: RequestInit = {
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  credentials: 'include'
 };
 
 // API error response interface

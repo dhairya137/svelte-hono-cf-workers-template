@@ -7,15 +7,13 @@
   // @ts-nocheck
   import { createEventDispatcher } from 'svelte';
 
-  const { 
-    type = 'button',
-    variant = 'default', 
-    size = 'default', 
-    disabled = false, 
-    loading = false, 
-    fullWidth = false, 
-    className = '' 
-  } = $props();
+  export let type = 'button';
+  export let variant = 'default';
+  export let size = 'default';
+  export let disabled = false;
+  export let loading = false;
+  export let fullWidth = false;
+  export let className = '';
 
   const dispatch = createEventDispatcher();
 

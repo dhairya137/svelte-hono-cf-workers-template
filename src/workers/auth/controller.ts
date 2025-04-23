@@ -104,9 +104,11 @@ export class AuthController {
       });
       
       // Set CSRF cookie (not HTTP-only)
+      const host = c.req.header('host') || '';
+      const isLocal = host.startsWith('localhost') || host.startsWith('127.0.0.1');
       setCookie(c, 'csrf_token', csrfToken, {
         httpOnly: false,
-        secure: true,
+        secure: !isLocal, // Only secure in production
         sameSite: 'Strict',
         path: '/',
         maxAge: 60 * 60 * 24 // 24 hours
@@ -188,9 +190,11 @@ export class AuthController {
       });
       
       // Set CSRF cookie (not HTTP-only)
+      const host = c.req.header('host') || '';
+      const isLocal = host.startsWith('localhost') || host.startsWith('127.0.0.1');
       setCookie(c, 'csrf_token', csrfToken, {
         httpOnly: false,
-        secure: true,
+        secure: !isLocal, // Only secure in production
         sameSite: 'Strict',
         path: '/',
         maxAge

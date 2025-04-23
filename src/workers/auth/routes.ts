@@ -19,6 +19,13 @@ auth.use('*', securityHeadersMiddleware);
 // Apply CSRF protection to all routes
 auth.use('*', csrfProtection);
 
+// CSRF token route (issue a CSRF token cookie)
+auth.get('/csrf', (c) => {
+  const token = crypto.randomUUID();
+  c.header('Set-Cookie', `csrf_token=${token}; Path=/; SameSite=Lax`);
+  return c.json({ csrfToken: token });
+});
+
 // Public routes
 auth.post('/signup', AuthController.signup);
 auth.post('/login', AuthController.login);

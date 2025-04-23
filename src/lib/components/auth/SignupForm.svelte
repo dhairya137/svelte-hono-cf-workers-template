@@ -5,7 +5,7 @@
   import FormField from '$lib/components/ui/FormField.svelte';
   import ErrorMessage from '$lib/components/ui/ErrorMessage.svelte';
   
-  let { onSignupSuccess = () => {} } = $props();
+  export let onSignupSuccess: () => void = () => {};
   
   let firstName = '';
   let lastName = '';

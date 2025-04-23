@@ -13,7 +13,11 @@ const AUTH_ENDPOINT = '/auth';
  */
 export async function signup(userData: NewUserData): Promise<{ success: boolean; user?: User; error?: string; errors?: Record<string, string> }> {
   authStore.setLoading(true);
-  
+
+  // Ensure CSRF token is set before signup
+  if (!getCookie('csrf_token')) {
+    await fetch('/api/auth/csrf', { credentials: 'include' });
+  }
   try {
     const data = await api.post<AuthResponse>(`${AUTH_ENDPOINT}/signup`, userData);
     
@@ -45,7 +49,11 @@ export async function signup(userData: NewUserData): Promise<{ success: boolean;
  */
 export async function login(credentials: LoginCredentials): Promise<{ success: boolean; user?: User; error?: string }> {
   authStore.setLoading(true);
-  
+
+  // Ensure CSRF token is set before login
+  if (!getCookie('csrf_token')) {
+    await fetch('/api/auth/csrf', { credentials: 'include' });
+  }
   try {
     const data = await api.post<AuthResponse>(`${AUTH_ENDPOINT}/login`, credentials);
     

@@ -44,15 +44,7 @@
 	<h1>Svelte5-Hono-CF Template</h1>
 	<p>A modern Svelte 5 frontend with Hono API on Cloudflare Workers</p>
 
-	<div class="mt-8 mb-4 flex space-x-4">
-		<a href="/login" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-orange-700 bg-orange-100 hover:bg-orange-200">
-			Go to Login Page
-		</a>
-		<a href="/signup" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700">
-			Go to Signup Page
-		</a>
-	</div>
-
+	
 	<div class="api-section">
 		<h2>Hono API Integration Demo</h2>
 
