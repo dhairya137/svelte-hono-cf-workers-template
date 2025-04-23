@@ -1,10 +1,8 @@
 /**
  * Navigation utility to handle page navigation
  */
-import { router } from 'tinro';
-
 /**
- * Navigate to a different page using client-side routing
+ * Navigate to a different page using manual client-side routing
  * @param url URL to navigate to
  */
 export function goto(url: string): void {
@@ -12,7 +10,10 @@ export function goto(url: string): void {
   if (!url.startsWith('/')) {
     url = '/' + url;
   }
-  router.goto(url);
+  window.history.pushState({}, '', url);
+  // Trigger route update: dispatch popstate and navigation events
+  window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+  window.dispatchEvent(new Event('navigation'));
 }
 
 /**

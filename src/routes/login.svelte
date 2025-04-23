@@ -5,8 +5,8 @@
   
   import type { User } from '$lib/types/auth';
   function handleLoginSuccess(user: User) {
-    // Redirect to user-specific page after successful login
-    goto(`/users/${user.id}`);
+    // Redirect to profile page after successful login
+    goto('/profile');
   }
 </script>
 
