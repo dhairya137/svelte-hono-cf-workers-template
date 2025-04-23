@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { authRoutes } from './auth/routes';
 
 // Create a Hono app for API routes
 const api = new Hono();
@@ -19,6 +20,9 @@ api.get('/users/:id', (c) => {
 		timestamp: new Date().toISOString()
 	});
 });
+
+// Mount auth routes
+api.route('/auth', authRoutes);
 
 // Example of how to add more routes:
 // api.get('/example', (c) => {

@@ -6,9 +6,25 @@ const config = {
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
 
-	// Enable the Svelte 5 compiler features
+	// Disable runes to make third-party libraries compatible
 	compilerOptions: {
-		runes: true
+		runes: false
+	},
+  
+	// Add the TypeScript config for JSX/TSX style element typings
+	kit: {
+		typescript: {
+			config: (config) => {
+				return {
+					...config,
+					compilerOptions: {
+						...config.compilerOptions,
+						jsx: 'preserve',
+						jsxImportSource: 'svelte'
+					}
+				};
+			}
+		}
 	}
 };
 

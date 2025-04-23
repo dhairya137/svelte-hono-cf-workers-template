@@ -1,114 +1,94 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-
-	interface APIData {
-		message: string;
-		timestamp: string;
-		[key: string]: any;
+	import Nav from './lib/components/Nav.svelte';
+	import { checkAuth } from './lib/services/auth';
+	
+	// Route components
+	import Home from './routes/Home.svelte';
+	import Login from './routes/login.svelte';
+	import Signup from './routes/signup.svelte';
+	import Profile from './routes/profile.svelte';
+	
+	// Current route
+	let currentRoute = '/';
+	
+	// Update current route on navigation
+	function handleNavigation() {
+		currentRoute = window.location.pathname;
 	}
-
-	let apiData = $state<APIData | null>(null);
-	let userData = $state<APIData | null>(null);
-	let loading = $state(false);
-	let userLoading = $state(false);
-	let userId = $state('1');
-
-	async function fetchApiData() {
-		loading = true;
-		try {
-			const response = await fetch('/api/hello');
-			apiData = await response.json();
-		} catch (error) {
-			console.error('Error fetching API data:', error);
-		} finally {
-			loading = false;
-		}
-	}
-
-	async function fetchUserData() {
-		userLoading = true;
-		try {
-			const response = await fetch(`/api/users/${userId}`);
-			userData = await response.json();
-		} catch (error) {
-			console.error('Error fetching user data:', error);
-		} finally {
-			userLoading = false;
-		}
-	}
+	
+	// Listen for navigation events
+	onMount(() => {
+		// Initial authentication check
+		checkAuth();
+		
+		// Initial route
+		handleNavigation();
+		
+		// Listen for popstate (back/forward) events
+		window.addEventListener('popstate', handleNavigation);
+		
+		// Cleanup
+		return () => {
+			window.removeEventListener('popstate', handleNavigation);
+		};
+	});
 </script>
 
-<h1>Svelte5-Hono-CF Template</h1>
-<p>A modern Svelte 5 frontend with Hono API on Cloudflare Workers</p>
+<!-- Navigation -->
+<Nav />
 
-<div class="api-section">
-	<h2>Hono API Integration Demo</h2>
-
-	<div class="api-card">
-		<h3>Basic API</h3>
-		<button onclick={fetchApiData} disabled={loading}>
-			{loading ? 'Loading...' : 'Fetch API Data'}
-		</button>
-
-		{#if apiData}
-			<div class="api-result">
-				<h4>API Response:</h4>
-				<pre>{JSON.stringify(apiData, null, 2)}</pre>
-			</div>
-		{/if}
-	</div>
-
-	<div class="api-card">
-		<h3>User API with Parameters</h3>
-		<div class="input-group">
-			<label for="userId">User ID:</label>
-			<input id="userId" type="text" bind:value={userId} />
+<!-- Router outlet -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+	{#if currentRoute === '/'}
+		<Home />
+	{:else if currentRoute === '/login'}
+		<Login />
+	{:else if currentRoute === '/signup'}
+		<Signup />
+	{:else if currentRoute === '/profile'}
+		<Profile />
+	{:else}
+		<div>
+			<h1>Page not found</h1>
+			<p>The page you are looking for does not exist.</p>
+			<a href="/" class="text-blue-600 hover:underline">Go back home</a>
 		</div>
-		<button onclick={fetchUserData} disabled={userLoading}>
-			{userLoading ? 'Loading...' : 'Fetch User Data'}
-		</button>
-
-		{#if userData}
-			<div class="api-result">
-				<h4>User Data:</h4>
-				<pre>{JSON.stringify(userData, null, 2)}</pre>
-			</div>
-		{/if}
-	</div>
+	{/if}
 </div>
 
 <style>
-	h1 {
+	:global(h1) {
 		color: #ff3e00;
 		font-size: 2.5rem;
 		margin-bottom: 0.5rem;
 	}
 
-	p {
+	:global(p) {
 		color: #555;
 		margin-bottom: 2rem;
 	}
 
-	.api-section {
+	:global(.api-section) {
 		margin-top: 2rem;
 		padding: 1rem;
 		border: 1px solid #ddd;
 		border-radius: 4px;
 	}
 
-	.api-card {
+	:global(.api-card) {
 		margin-bottom: 1.5rem;
 		padding: 1rem;
 		background-color: #f9f9f9;
 		border-radius: 4px;
 	}
 
-	h3 {
+	:global(h3) {
 		margin-bottom: 1rem;
 		color: #333;
 	}
 
-	button {
+	:global(button) {
 		background-color: #ff3e00;
 		color: white;
 		border: none;
@@ -118,32 +98,32 @@
 		margin-top: 0.5rem;
 	}
 
-	button:disabled {
+	:global(button:disabled) {
 		background-color: #ccc;
 	}
 
-	.api-result {
+	:global(.api-result) {
 		margin-top: 1rem;
 		padding: 1rem;
 		background-color: #f8f8f8;
 		border-radius: 4px;
 	}
 
-	pre {
+	:global(pre) {
 		white-space: pre-wrap;
 		word-break: break-word;
 	}
 
-	.input-group {
+	:global(.input-group) {
 		margin-bottom: 0.5rem;
 	}
 
-	label {
+	:global(label) {
 		display: block;
 		margin-bottom: 0.25rem;
 	}
 
-	input {
+	:global(input) {
 		padding: 0.5rem;
 		border: 1px solid #ddd;
 		border-radius: 4px;

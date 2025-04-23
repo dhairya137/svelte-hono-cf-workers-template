@@ -1,17 +1,28 @@
-import tailwindcss from '@tailwindcss/vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
+import tailwindcss from '@tailwindcss/postcss';
+import autoprefixer from 'autoprefixer';
+import { resolve } from 'path';
 
 export default defineConfig({
 	plugins: [
-		tailwindcss(),
 		svelte({
-			// Enable Svelte 5 runes
+			// Disable Svelte 5 runes for compatibility with libraries
 			compilerOptions: {
-				runes: true
+				runes: false
 			}
 		})
 	],
+	css: {
+		postcss: {
+			plugins: [tailwindcss(), autoprefixer()],
+		},
+	},
+	resolve: {
+		alias: {
+			'$lib': resolve('./src/lib')
+		}
+	},
 	build: {
 		outDir: 'dist',
 		assetsInlineLimit: 0, // Don't inline assets as base64

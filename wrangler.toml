@@ -1,15 +1,22 @@
 name = "svelte-hono-cf-workers-template"
 main = "src/worker.ts"
-compatibility_date = "2025-04-21"
+compatibility_date = "2025-04-16"
 compatibility_flags = ["nodejs_compat"]
 
 [assets]
 directory = "dist"
 binding = "ASSETS"
-not_found_handling = "single-page-application"
+# not_found_handling = "single-page-application"
 
 [observability]
 enabled = true
 
 [dev]
 port = 8787 
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "auth-svelte-hono"
+database_id = "9a038f7f-32f6-4a33-b263-0c82145ebd64"
+migrations_dir = "drizzle"

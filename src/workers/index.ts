@@ -1,12 +1,15 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { apiRoutes } from './api';
+import { D1Database } from '@cloudflare/workers-types';
+// import { migrateDatabase } from './db/migrations';
 
 // Define the environment interface for Cloudflare Workers
 interface Env {
 	ASSETS: {
 		fetch: typeof fetch;
 	};
+	DB: D1Database;
 }
 
 // Create the main app with proper typing
@@ -25,6 +28,20 @@ app.use('*', async (c, next) => {
 		throw err;
 	}
 });
+
+// Database migration is now handled by Drizzle CLI
+// No need to run migrations from code
+// app.use('*', async (c, next) => {
+// 	try {
+// 		if (process.env.NODE_ENV !== 'production' || c.req.query('init-db') === 'true') {
+// 			console.log('Initializing database...');
+// 			await migrateDatabase(c.env.DB);
+// 		}
+// 	} catch (err) {
+// 		console.error('Error initializing database:', err);
+// 	}
+// 	await next();
+// });
 
 // Mount API routes
 app.route('/api', apiRoutes);
