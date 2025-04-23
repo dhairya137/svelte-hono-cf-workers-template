@@ -9,7 +9,7 @@
 		"preview": "npm run build && wrangler dev src/worker.ts",
 		"format": "prettier --write .",
 		"lint": "prettier --check .",
-		"deploy": "npm run build && wrangler deploy",
+		"deploy": "npm run build && npx wrangler deploy",
 		"db:create": "npx wrangler d1 create auth-svelte-hono",
 		"db:migrations:generate": "drizzle-kit generate",
 		"db:migrations:apply": "npx wrangler d1 migrations apply auth-svelte-hono --local",

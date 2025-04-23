@@ -1,194 +1,118 @@
 # Svelte 5 + Hono + Cloudflare Workers Template
 
-This is a starter template that combines Svelte 5 (with Runes) for the frontend with Hono running on Cloudflare Workers for the backend API. The entire application is served from a single Cloudflare Worker, providing a modern, unified full-stack development experience.
+A full‑stack starter combining a Svelte 5 SPA frontend with Runes for reactivity and a Hono API backend—all served from a single Cloudflare Worker. It includes JWT‑based authentication (RS256), CSRF protection, manual client‑side routing, and D1 database integration.
 
 ## Features
 
-- 🔥 **Svelte 5** with Runes for reactive state management
-- ⚡️ **Hono** for backend API routing
-- 🌩️ **Cloudflare Workers** for serverless deployment
-- 🔄 **Single worker** serving both the static frontend and API
-- 📝 **TypeScript** throughout
-- 🎨 **TailwindCSS** for styling
-- 📦 **Vite** for fast builds
-- 🔒 **SPA routing** support
+- **Svelte 5 + Runes**: Reactive frontend components and manual SPA routing.
+- **Hono**: Lightweight, TypeScript‑first API routing on Cloudflare Workers.
+- **Cloudflare Workers**: Single Worker serving both static assets and API.
+- **D1 Database**: SQLite‑compatible, serverless user store.
+- **JWT Auth (RS256)**: Secure token issuance and verification using environment‑injected RSA keys.
+- **CSRF Tokens**: Double‑submit pattern with HTTP‑only auth and sameSite CSRF cookies.
+- **Protected Routes**: Frontend (`<ProtectedRoute/>`) and backend guards.
+- **Tailwind CSS**: Utility‑first styling.
+- **Vite**: Fast builds and hot‑reload.
+- **Wrangler Integration**: One‑command develop and deploy.
 
-## Quick Start
+## Architecture & Flow
 
-1. Clone this repository
+1. **Frontend SPA** (`src/App.svelte`):
+   - Tracks `currentRoute` from `window.location.pathname`.
+   - Uses `goto()` (dispatches `popstate` + custom `navigation` events) for in‑app links.
+   - Renders route components: `Home`, `Login`, `Signup`, `Profile`, or 404.
+2. **Auth Layout & Forms**:
+   - `LoginForm.svelte` and `SignupForm.svelte` call `$lib/services/auth`.
+   - On success, `AuthStore` updates and calls `onLoginSuccess`, triggering `goto('/profile')`.
+3. **API Layer** (`src/workers/worker.ts`):
+   - Hono app serves static assets and `/api/*` endpoints.
+   - `AuthController` handlers read `c.env.JWT_PRIVATE_KEY` & `JWT_PUBLIC_KEY`.
+   - UserRepo (D1) stores/verifies users; passwords hashed with SHA‑256 + salt.
+   - `createJwt()` signs tokens; cookies set via `hono/cookie`.
+4. **ProtectedRoute** (`ProtectedRoute.svelte`):
+   - On mount, checks `authStore` or calls `/api/auth/me`.
+   - Redirects unauthenticated users to `/login`.
 
-   ```bash
-   git clone https://github.com/dhairya137/svelte-hono-cf-workers-template.git my-app
-   cd my-app
-   ```
+## Folder Structure
 
-2. Install dependencies
+```
+├─ src/
+│  ├─ App.svelte            # SPA router
+│  ├─ worker.ts             # Hono entrypoint
+│  ├─ lib/
+│  │  ├─ components/
+│  │  │  ├─ Nav.svelte
+│  │  │  ├─ auth/           # AuthLayout, LoginForm, ProtectedRoute
+│  │  │  └─ ui/             # Button, Input, FormField, ErrorMessage
+│  │  ├─ services/          # auth.ts (frontend), api.ts
+│  │  ├─ stores/            # authStore.ts
+│  │  └─ utils/
+│  │     └─ navigation.ts   # `goto`, `back`, etc.
+│  └─ routes/               # Svelte pages: Home, login, signup, profile
+├─ package.json
+├─ wrangler.toml            # Cloudflare config & env binding
+└─ README.md                # ← This file
+```
 
-   ```bash
-   npm install
-   ```
+## Prerequisites
 
-3. Start development server
+- Node.js ≥ 18
+- npm
+- Wrangler CLI (`npm install -g wrangler`)
 
-   ```bash
-   npm run dev
-   ```
-
-4. Build for production
-
-   ```bash
-   npm run build
-   ```
-
-5. Deploy to Cloudflare Workers
-   ```bash
-   npm run deploy
-   ```
-
-## Project Structure
+## Installation
 
 ```bash
-├── src/                  # Source code
-│   ├── App.svelte        # Main Svelte component
-│   ├── main.ts           # Svelte entry point
-│   ├── app.css           # Global CSS
-│   ├── worker.ts         # Worker entry point
-│   └── workers/          # Worker code
-│       ├── index.ts      # Main worker (serves frontend + API)
-│       └── api.ts        # API routes using Hono
-├── public/               # Static assets
-├── index.html            # HTML entry point
-├── svelte.config.js      # Svelte configuration
-├── vite.config.ts        # Vite configuration
-└── wrangler.toml         # Cloudflare Workers configuration
+git clone https://github.com/dhairya137/svelte-hono-cf-workers-template.git
+cd svelte-hono-cf-workers-template
+npm install
 ```
 
-## How It Works
+## Development
 
-### Frontend (Svelte 5)
-
-The Svelte 5 app starts in `src/main.ts`, which mounts the main `App.svelte` component. The app uses Svelte 5's Runes for state management (`$state`, etc.) and modern event handling attributes (`onclick`).
-
-```javascript
-// Example from src/main.ts
-import { mount } from 'svelte';
-const app = mount(App, {
-	target: document.getElementById('app'),
-	props: {}
-});
+Start the dev server (build + local Worker simulation):
+```bash
+npm run dev
+# Visit http://localhost:8787
 ```
 
-```js
-<!-- Example from App.svelte -->
-<script lang="ts">
-	let count = $state(0);
+## Environment Variables & Secrets
 
-	function increment() {
-		count++;
-	}
-</script>
+Configure RSA keys for JWT in your `wrangler.toml` or via secrets:
 
-<button onclick={increment}>Count: {count}</button>
-```
-
-### Backend (Hono)
-
-The API is built with Hono in `src/workers/api.ts`. Hono provides a modern, Express-like API for creating routes.
-
-```typescript
-// Example from src/workers/api.ts
-import { Hono } from 'hono';
-
-const api = new Hono();
-
-api.get('/hello', (c) => {
-	return c.json({
-		message: 'Hello from Hono!',
-		timestamp: new Date().toISOString()
-	});
-});
-
-export const apiRoutes = api;
-```
-
-### Integration (Cloudflare Workers)
-
-Both the frontend and backend are served from a single Cloudflare Worker, configured in `src/workers/index.ts`. The worker serves the static Svelte app and routes API requests to Hono.
-
-```typescript
-// Example from src/workers/index.ts
-import { Hono } from 'hono';
-import { apiRoutes } from './api';
-
-const app = new Hono();
-
-// Mount API routes
-app.route('/api', apiRoutes);
-
-// Serve static files
-app.get('*', async (c) => {
-	// ... serve static files or fallback to index.html
-});
-
-export default app;
-```
-
-## API Examples
-
-The template includes example API endpoints:
-
-- `GET /api/hello` - Returns a greeting message
-- `GET /api/users/:id` - Returns user data for a given ID
-
-## Customization
-
-### Adding New API Routes
-
-Add new routes in `src/workers/api.ts`:
-
-```typescript
-api.get('/new-endpoint', (c) => {
-	return c.json({
-		message: 'This is a new endpoint',
-		data: {
-			/* your data */
-		}
-	});
-});
-```
-
-### Adding New Frontend Components
-
-Create new Svelte components in the `src` directory and import them in `App.svelte`.
-
-### Environment Variables
-
-Add environment variables in `wrangler.toml`:
-
+**wrangler.toml**:
 ```toml
+name = "svelte-hono-cf-workers-template"
+
 [vars]
-MY_VARIABLE = "my-value"
+JWT_PUBLIC_KEY  = "<your‑public‑JWK‑JSON>"
+JWT_PRIVATE_KEY = "<your‑private‑PKCS8‑PEM>"
+
+[dev.vars]
+# optional local overrides
 ```
+
+Or at runtime (production):
+```bash
+npx wrangler secret put JWT_PUBLIC_KEY
+npx wrangler secret put JWT_PRIVATE_KEY
+```
+
+## Testing Auth Flow
+
+1. **Sign up** → sets `auth_token` and `csrf_token` cookies.
+2. **Login** → redirects to `/profile` and updates Nav links.
+3. **Access `/profile`** → guarded by `<ProtectedRoute/>` and server `/api/auth/me`.
+4. **Logout** → clears cookies and redirects to home.
 
 ## Deployment
 
-This template is configured for deployment to Cloudflare Workers:
-
-1. Configure your Cloudflare account in Wrangler
-
-   ```bash
-   npx wrangler login
-   ```
-
-2. Deploy your application
-   ```bash
-   npm run deploy
-   ```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+Build & deploy in one step:
+```bash
+npm run deploy
+```
+Your site and API will be live at the Workers domain shown by Wrangler.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT
